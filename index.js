@@ -18,12 +18,22 @@ const run = async() => {
     try{
         await client.connect();
         const toolsCollection = client.db('toolex').collection('tools');
+        const reviewsCollection = client.db('toolex').collection('reviews');
 
+        // tools collection
         app.get('/tool', async(req, res) => {
             const query = {};
             const cursor = toolsCollection.find(query);
             const tools = await cursor.toArray();
             res.send(tools);
+        })
+
+        // reviews collection
+        app.get('/review', async(req, res) => {
+            const query = {};
+            const cursor = reviewsCollection.find(query);
+            const reviews = await cursor.toArray();
+            res.send(reviews);
         })
     }
     finally{
