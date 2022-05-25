@@ -95,10 +95,31 @@ const run = async() => {
           res.send(result);
       })
 
+      // single user post
+      // app.post("/user", async (req, res) => {
+      //   const user = req.body;
+      //   const result = await userCollection.insertOne(user);
+      //   res.send(result);
+      // });
+
         app.get('/user', verifyJWT, async (req, res) => {
             const users = await userCollection.find().toArray();
             res.send(users);
           });
+
+        // update user
+        app.get("/users", verifyJWT, async (req, res) => {
+          const decodedEmail = req.decoded.email;
+          const email = req.query.email;
+          if (email === decodedEmail) {
+            const query = { email: email };
+            const cursor = userCollection.find(query);
+            const user = await cursor.toArray();
+            res.send(user);
+          } else {
+            res.status(403).send({ message: "Forbidden Access" });
+          }
+        });
 
           app.get('/admin/:email', async(req, res) =>{
             const email = req.params.email;
@@ -126,11 +147,16 @@ const run = async() => {
 
         app.put('/user/:email', async (req, res) => {
             const email = req.params.email;
-            const user = req.body;
+            const updateUser = req.body;
             const filter = { email: email };
             const options = { upsert: true };
             const updateDoc = {
-              $set: user,
+              $set: {
+                address: updateUser.address,
+                education: updateUser.education,
+                number: updateUser.number,
+                linkedin: updateUser.linkedin,
+              },
             };
             const result = await userCollection.updateOne(filter, updateDoc, options);
           const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2h' })
