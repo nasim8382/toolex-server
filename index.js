@@ -36,6 +36,7 @@ const run = async() => {
         const toolsCollection = client.db('toolex').collection('tools');
         const reviewsCollection = client.db('toolex').collection('reviews');
         const userCollection = client.db('toolex').collection('users');
+        const orderCollection = client.db('toolex').collection('orders');
 
         const verifyAdmin = async (req, res, next) => {
           const requester = req.decoded.email;
@@ -162,6 +163,13 @@ const run = async() => {
           const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2h' })
           res.send({ result, token });
           })
+
+          // post orders
+          app.post("/orders", async (req, res) => {
+            const orders = req.body;
+            const result = await orderCollection.insertOne(orders);
+            res.send(result);
+          });
     }
     finally{
 
