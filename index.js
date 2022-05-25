@@ -57,6 +57,13 @@ const run = async() => {
             res.send(tools);
         })
 
+        // add tool
+        app.post("/tool", async (req, res) => {
+          const tool = req.body;
+          const result = await toolsCollection.insertOne(tool);
+          res.send(result);
+        });
+
         // individual tool
         app.get('/tool/:id', async(req, res) => {
             const id = req.params.id;
