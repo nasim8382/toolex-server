@@ -110,13 +110,7 @@ const run = async() => {
           res.send(result);
       })
 
-      // single user post
-      // app.post("/user", async (req, res) => {
-      //   const user = req.body;
-      //   const result = await userCollection.insertOne(user);
-      //   res.send(result);
-      // });
-
+      // user collection
         app.get('/user', verifyJWT, async (req, res) => {
             const users = await userCollection.find().toArray();
             res.send(users);
@@ -178,6 +172,7 @@ const run = async() => {
           res.send({ result, token });
           })
 
+          // allorders
           app.get("/allorders", verifyJWT, async (req, res) => {
             const orders = await orderCollection.find().toArray();
             res.send(orders);
